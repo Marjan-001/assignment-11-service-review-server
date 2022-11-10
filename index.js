@@ -74,7 +74,7 @@ async function run() {
         })
 
 
-        app.get('/myreview', async (req, res) => {
+        app.get('/myreview', verifyJWT, async (req, res) => {
 
 
             let query = {};
