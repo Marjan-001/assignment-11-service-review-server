@@ -64,7 +64,7 @@ async function run() {
             res.send(service);
         });
 
-        app.post('/reviews', verifyJWT, async (req, res) => {
+        app.post('/reviews', async (req, res) => {
 
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
@@ -99,7 +99,7 @@ async function run() {
                     service: req.query.serviceId
                 }
             }
-            const cursor = reviewCollection.find(query).sort({ _id: -1 });
+            const cursor = reviewCollection.find(query).sort({ service: -1 });
             const reviews = await cursor.toArray();
             res.send(reviews);
 
