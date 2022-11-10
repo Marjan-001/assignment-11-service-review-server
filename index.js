@@ -16,7 +16,7 @@ async function run() {
 
     try {
         const serviceCollection = client.db('PersonalStylist').collection('services');
-
+        const reviewCollection = client.db('PersonalStylist').collection('reviews')
         app.get('/services', async (req, res) => {
             const query = {}
             const size = 3;
@@ -38,6 +38,29 @@ async function run() {
             const service = await serviceCollection.findOne(query);
             res.send(service);
         });
+
+        app.post('/reviews', async (req, res) => {
+
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+
+
+        })
+
+        // app.get('/reviews/:id', async (req, res) => {
+
+        //     const serviceId = req.params.id;
+        //     const query = {
+        //         service_id: serviceId
+
+        //     };
+        //     const reviews = await reviewCollection.findOne(query);
+        //     res.send(reviews);
+
+        // })
+
+
 
     }
     finally {
