@@ -48,19 +48,42 @@ async function run() {
 
         })
 
-        // app.get('/reviews/:id', async (req, res) => {
 
-        //     const serviceId = req.params.id;
-        //     const query = {
-        //         service_id: serviceId
+        app.get('/myreview', async (req, res) => {
+            let query = {};
 
-        //     };
-        //     const reviews = await reviewCollection.findOne(query);
-        //     res.send(reviews);
+            if (req.query.email) {
+                query = {
+                    email: req.query.email
+                }
+            }
 
-        // })
+            const cursor = reviewCollection.find(query);
+            const myreviews = await cursor.toArray();
+            res.send(myreviews);
+        });
 
+        app.get('/review', async (req, res) => {
 
+            // const serviceId = req.params.id;
+            let query = {};
+            if (req.query.serviceId) {
+                query = {
+                    service: req.query.serviceId
+                }
+            }
+            const cursor = reviewCollection.find(query).sort({ _id: -1 });
+            const reviews = await cursor.toArray();
+            res.send(reviews);
+
+        })
+
+        app.delete('/myreview/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await reviewCollection.deleteOne(query);
+            res.send(result);
+        })
 
     }
     finally {
