@@ -51,7 +51,7 @@ async function run() {
         });
         app.get('/allservices', async (req, res) => {
             const query = {}
-            const size = 3;
+
             const cursor = serviceCollection.find(query);
             const services = await cursor.toArray();
             res.send(services);
@@ -72,6 +72,17 @@ async function run() {
 
 
         })
+        app.post('/addservice', async (req, res) => {
+
+            const ser = req.body;
+            const result = await serviceCollection.insertOne(ser);
+            res.send(result);
+
+
+        })
+
+
+
 
 
         app.get('/myreview', verifyJWT, async (req, res) => {
