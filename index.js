@@ -115,13 +115,51 @@ async function run() {
             res.send(reviews);
 
         })
+        app.get('/myreviews/:id', async (req, res) => {
+            // const id = req.params.id;
+            let query = {};
 
-        app.delete('/myreview/:id', verifyJWT, async (req, res) => {
+            // const query = { _id: ObjectId(id) };
+            if (req.query.serviceId) {
+                query = {
+                    service: req.query.serviceId
+                }
+            }
+            const result = await reviewCollection.findOne(query);
+            res.send(result);
+        })
+        app.put('/myreviews/:id', async (req, res) => {
+
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const updatedReview = req.body;
+            const option = { upsert: true };
+            const updateDoc = {
+                $set: {
+                    customer: updatedReview.firstName,
+                    customer: updatedReview.lastName,
+                    email: updatedReview.email,
+                    message: updatedReview.message,
+                    phone: updatedReview.phone
+
+                }
+
+            }
+            console.log(updatedReview)
+
+
+            const result = await reviewCollection.updateOne(filter, updateDoc, option)
+            res.send(result)
+        })
+
+
+        app.delete('/myreview/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
+
 
     }
     finally {
